@@ -5,18 +5,16 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
-import br.com.alura.forum.modelo.Curso;
 import br.com.alura.forum.modelo.Topico;
-import br.com.alura.forum.repository.CursoRepository;
+import br.com.alura.forum.repository.TopicoRepository;
 
-public class TopicoForm {
+public class AtualizacaoTopicoForm {
 
 	@NotNull @NotEmpty @Length(min = 5)
 	private String titulo;
 	@NotNull @NotEmpty @Length(min = 10)
 	private String mensagem;
-	@NotNull @NotEmpty
-	private String nomeDoCurso;
+	// No nosso exemplo não vai ser permitido mudar o curso
 
 	public String getTitulo() {
 		return titulo;
@@ -34,18 +32,13 @@ public class TopicoForm {
 		this.mensagem = mensagem;
 	}
 
-	public String getNomeDoCurso() {
-		return nomeDoCurso;
-	}
-
-	public void setNomeDoCurso(String nomeDoCurso) {
-		this.nomeDoCurso = nomeDoCurso;
-	}
-	
-	public Topico converter(CursoRepository repository) {
-		Curso curso = repository.findByNome(nomeDoCurso);
+	public Topico atualizar(Long id, TopicoRepository topicoRepository) {
+		Topico topico = topicoRepository.getOne(id);
 		
-		return new Topico(titulo, mensagem, curso);
+		topico.setTitulo(this.titulo);
+		topico.setMensagem(this.mensagem);
+		
+		return topico;
 	}
 
 }
